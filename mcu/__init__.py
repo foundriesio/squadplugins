@@ -24,7 +24,7 @@ class MCUResults(BasePlugin):
                 suite_slug = result.group("test_unit")
                 # found a potential test result
                 test_name = result.group("test_case_id")
-                expected_result = testrun.metadata.get(test_name, None)
+                expected_result = testrun.metadata.get(f"{suite_slug}/{test_name}", None)
                 if expected_result:
                     # found a matching key in metadata
                     test_result = False  # set fail as default

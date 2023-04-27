@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='squad-foundries-plugins',
-    version='1.0',
+    version='1.1',
     author='Milosz Wasilewski',
     author_email='milosz.wasilewski@foundries.io',
     url='https://github.com/foundries/squadplugins',
