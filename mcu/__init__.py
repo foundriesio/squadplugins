@@ -14,6 +14,7 @@ class MCUResults(BasePlugin):
     name = "MCU test results"
 
     def postprocess_testrun(self, testrun):
+        has_test_results = False
         regex = re.compile("TEST (?P<test_unit>.*) (?P<test_case_id>.*)=(?P<measurement>.*)")
         issues = defaultdict(list)
         for issue in KnownIssue.active_by_environment(testrun.environment):
@@ -26,6 +27,7 @@ class MCUResults(BasePlugin):
                 test_name = result.group("test_case_id")
                 expected_result = testrun.metadata.get(f"{suite_slug}/{test_name}", None)
                 if expected_result:
+                    has_test_results = True
                     # found a matching key in metadata
                     test_result = False  # set fail as default
                     measurement = result.group("measurement")
@@ -49,6 +51,7 @@ class MCUResults(BasePlugin):
 
         Status.objects.filter(test_run=testrun).all().delete()
         testrun.status_recorded = False
+        testrun.completed = has_test_results
         RecordTestRunStatus()(testrun)
 
         ProjectStatus.create_or_update(testrun.build)
